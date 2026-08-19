@@ -53,7 +53,7 @@ async function handleTextMessage(event: LineMessageEvent, accessToken: string) {
   console.log("[webhook] userId:", userId, "message:", userMessage);
 
   let replyText = ESCALATION_REPLY;
-  let confidence: "高" | "中" | "低" = "低";
+  let confidence = 0; // エラー時はエスカレーション扱い
 
   try {
     const faqs = await fetchFaqs();
@@ -63,12 +63,11 @@ async function handleTextMessage(event: LineMessageEvent, accessToken: string) {
     confidence = result.confidence;
     console.log("[webhook] Claude confidence:", confidence, "answer:", result.answer);
 
-    if (confidence === "高" || confidence === "中") {
+    if (confidence >= 6) {
       replyText = result.answer;
     }
   } catch (err) {
     console.error("[webhook] FAQ/Claude error:", err);
-    // エラー時はエスカレーション扱い（replyText と confidence はデフォルト値のまま）
   }
 
   // LINE返信は必ず実行
@@ -79,8 +78,8 @@ async function handleTextMessage(event: LineMessageEvent, accessToken: string) {
     console.error("[webhook] sendReply failed:", err);
   }
 
-  if (confidence === "低") {
-    await escalate(userId, userMessage, replyText, accessToken);
+  if (confidence <= 5) {
+    await escalate(userId, userMessage, replyText, confidence, accessToken);
   }
 }
 
@@ -88,6 +87,7 @@ async function escalate(
   userId: string,
   userMessage: string,
   botResponse: string,
+  confidence: number,
   accessToken: string
 ) {
   const ownerUserId = process.env.OWNER_LINE_USER_ID;
@@ -110,10 +110,10 @@ async function escalate(
       user_id: userId,
       message: userMessage,
       bot_response: botResponse,
-      confidence: "低",
+      confidence,
       escalated: true,
     });
-    console.log("[webhook] Conversation saved (escalated)");
+    console.log("[webhook] Conversation saved (escalated, confidence:", confidence, ")");
   } catch (err) {
     console.error("[webhook] saveConversation failed:", err);
   }

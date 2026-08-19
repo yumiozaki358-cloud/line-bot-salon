@@ -10,7 +10,7 @@ export interface FaqItem {
 
 export interface ClaudeResult {
   answer: string;
-  confidence: "高" | "中" | "低";
+  confidence: number; // 0〜10の整数
 }
 
 export async function askClaude(
@@ -30,13 +30,13 @@ export async function askClaude(
 
 {
   "answer": "回答文（敬語で丁寧に）",
-  "confidence": "高" | "中" | "低"
+  "confidence": 0〜10の整数
 }
 
-confidenceの判定基準:
-- 高: FAQの内容だけで自信を持って正確に答えられる
-- 中: FAQに関連情報はあるが断定できない、または補足が必要
-- 低: FAQに該当情報がなく一般論でしか答えられない`,
+confidenceの判定基準（厳守）:
+- 8〜10: FAQに直接該当する記述があり、断定できる
+- 6〜7: FAQに関連する情報はあるが、断定はできない
+- 5以下: FAQに直接該当する記述がない場合は必ず5以下にすること`,
     messages: [
       {
         role: "user",
@@ -48,12 +48,12 @@ confidenceの判定基準:
   const block = message.content[0];
   if (block.type !== "text") throw new Error("Unexpected Claude response type");
 
-  // マークダウンコードブロックやテキストに囲まれていても抽出できるようにする
   const jsonMatch = block.text.match(/\{[\s\S]*?\}/);
   if (!jsonMatch) throw new Error(`JSON not found in Claude response: ${block.text}`);
 
   const parsed = JSON.parse(jsonMatch[0]) as ClaudeResult;
-  if (!parsed.answer || !["高", "中", "低"].includes(parsed.confidence)) {
+  const c = parsed.confidence;
+  if (!parsed.answer || typeof c !== "number" || !Number.isInteger(c) || c < 0 || c > 10) {
     throw new Error(`Invalid Claude response format: ${jsonMatch[0]}`);
   }
 

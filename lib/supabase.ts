@@ -4,7 +4,7 @@ export interface ConversationLog {
   user_id: string;
   message: string;
   bot_response: string;
-  confidence: string;
+  confidence: number;
   escalated: boolean;
 }
 
