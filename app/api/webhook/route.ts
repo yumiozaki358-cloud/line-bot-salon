@@ -35,8 +35,11 @@ async function processEvents(events: LineEvent[], accessToken: string) {
   for (const event of events) {
     console.log("[webhook] Processing event type:", event.type);
 
+    console.log("[webhook] Event detail:", JSON.stringify(event, null, 2));
+
     if (event.type === "message") {
       const e = event as LineMessageEvent;
+      console.log("[webhook] userId:", e.source.userId);
       console.log("[webhook] Message type:", e.message.type);
 
       if (e.message.type === "text" && "text" in e.message) {
