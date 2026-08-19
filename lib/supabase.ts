@@ -81,6 +81,56 @@ export async function deleteFaq(id: number): Promise<void> {
   }
 }
 
+export interface MenuItem {
+  id: number;
+  name: string;
+  price: number;
+  description: string | null;
+}
+
+export async function fetchMenus(): Promise<MenuItem[]> {
+  const res = await fetch(url("menus?select=id,name,price,description&order=id.asc"), {
+    headers: headers(),
+  });
+  if (!res.ok) throw new Error(`Supabase fetchMenus failed: ${res.status}`);
+  return res.json() as Promise<MenuItem[]>;
+}
+
+export async function createMenu(menu: Omit<MenuItem, "id">): Promise<void> {
+  const res = await fetch(url("menus"), {
+    method: "POST",
+    headers: { ...headers(), Prefer: "return=minimal" },
+    body: JSON.stringify(menu),
+  });
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Supabase createMenu failed: ${res.status}: ${detail}`);
+  }
+}
+
+export async function updateMenu(id: number, menu: Omit<MenuItem, "id">): Promise<void> {
+  const res = await fetch(url(`menus?id=eq.${id}`), {
+    method: "PATCH",
+    headers: { ...headers(), Prefer: "return=minimal" },
+    body: JSON.stringify(menu),
+  });
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Supabase updateMenu failed: ${res.status}: ${detail}`);
+  }
+}
+
+export async function deleteMenu(id: number): Promise<void> {
+  const res = await fetch(url(`menus?id=eq.${id}`), {
+    method: "DELETE",
+    headers: headers(),
+  });
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Supabase deleteMenu failed: ${res.status}: ${detail}`);
+  }
+}
+
 export async function saveConversation(log: ConversationLog): Promise<void> {
   const res = await fetch(url("conversations"), {
     method: "POST",
