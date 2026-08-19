@@ -43,7 +43,7 @@ function FormFields({
           value={form.category}
           onChange={(e) => onChange({ ...form, category: e.target.value })}
           placeholder="例：営業案内"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
       <div>
@@ -53,7 +53,7 @@ function FormFields({
           value={form.question}
           onChange={(e) => onChange({ ...form, question: e.target.value })}
           placeholder="例：営業時間は？"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
       <div>
@@ -63,7 +63,7 @@ function FormFields({
           onChange={(e) => onChange({ ...form, answer: e.target.value })}
           placeholder="例：平日10:00〜19:00、土日9:00〜18:00（火曜定休）"
           rows={3}
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
         />
       </div>
     </div>
