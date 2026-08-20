@@ -14,11 +14,11 @@
 
 | FAQ 管理 | メニュー管理 | 会話ログ |
 |---|---|---|
-| [ここにスクリーンショット] | [ここにスクリーンショット] | [ここにスクリーンショット] |
+| ![FAQ管理](docs/screenshots/admin-faq.png) | ![メニュー管理](docs/screenshots/admin-menu.png) | ![会話ログ](docs/screenshots/admin-conversations.png) |
 
 ### お知らせ配信
 
-[ここにスクリーンショット（プレビュー → 確認 → 送信フロー）]
+![お知らせ配信（プレビュー状態）](docs/screenshots/admin-broadcast-preview.png)
 
 ---
 
