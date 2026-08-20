@@ -131,6 +131,30 @@ export async function deleteMenu(id: number): Promise<void> {
   }
 }
 
+export interface ConversationRecord {
+  id: number;
+  user_id: string;
+  message: string;
+  bot_response: string;
+  confidence: number;
+  escalated: boolean;
+  created_at: string;
+}
+
+export async function fetchConversations(
+  limit: number,
+  offset: number
+): Promise<ConversationRecord[]> {
+  const res = await fetch(
+    url(
+      `conversations?select=id,user_id,message,bot_response,confidence,escalated,created_at&order=created_at.desc&limit=${limit}&offset=${offset}`
+    ),
+    { headers: headers() }
+  );
+  if (!res.ok) throw new Error(`Supabase fetchConversations failed: ${res.status}`);
+  return res.json() as Promise<ConversationRecord[]>;
+}
+
 export async function saveConversation(log: ConversationLog): Promise<void> {
   const res = await fetch(url("conversations"), {
     method: "POST",

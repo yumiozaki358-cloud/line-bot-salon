@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const tabs = [
   { href: "/admin/faq", label: "質問と回答" },
   { href: "/admin/menu", label: "メニュー" },
+  { href: "/admin/conversations", label: "会話ログ" },
 ];
 
 export default function NavTabs() {
