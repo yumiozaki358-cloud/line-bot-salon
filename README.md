@@ -4,7 +4,7 @@
 営業時間外を含むお客様からの問い合わせを AI が自動で回答し、  
 オーナーの一次対応業務を大幅に削減します。
 
-**本番 URL**: `https://YOUR_VERCEL_URL.vercel.app`
+**本番 URL**: https://line-bot-salon-zeta.vercel.app
 
 ---
 
