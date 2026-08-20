@@ -166,3 +166,34 @@ export async function saveConversation(log: ConversationLog): Promise<void> {
     throw new Error(`Supabase saveConversation failed: ${res.status}: ${detail}`);
   }
 }
+
+export interface BroadcastRecord {
+  id: number;
+  message: string;
+  sent_at: string;
+  recipient_count: number | null;
+}
+
+export async function saveBroadcast(
+  message: string,
+  recipientCount: number | null
+): Promise<void> {
+  const res = await fetch(url("broadcasts"), {
+    method: "POST",
+    headers: { ...headers(), Prefer: "return=minimal" },
+    body: JSON.stringify({ message, recipient_count: recipientCount }),
+  });
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Supabase saveBroadcast failed: ${res.status}: ${detail}`);
+  }
+}
+
+export async function fetchBroadcasts(limit: number): Promise<BroadcastRecord[]> {
+  const res = await fetch(
+    url(`broadcasts?select=id,message,sent_at,recipient_count&order=sent_at.desc&limit=${limit}`),
+    { headers: headers() }
+  );
+  if (!res.ok) throw new Error(`Supabase fetchBroadcasts failed: ${res.status}`);
+  return res.json() as Promise<BroadcastRecord[]>;
+}
