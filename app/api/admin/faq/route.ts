@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { fetchFaqsWithId, createFaq } from "@/lib/supabase";
 
@@ -30,5 +31,6 @@ export async function POST(request: Request) {
   }
 
   await createFaq({ question: question.trim(), answer: answer.trim(), category: category.trim() });
+  revalidateTag("faqs", { expire: 0 });
   return NextResponse.json({ ok: true }, { status: 201 });
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { fetchMenus, createMenu } from "@/lib/supabase";
 
@@ -34,5 +35,6 @@ export async function POST(request: Request) {
   const desc = typeof description === "string" ? description.trim() || null : null;
 
   await createMenu({ name: name.trim(), price: priceNum, description: desc });
+  revalidateTag("menus", { expire: 0 });
   return NextResponse.json({ ok: true }, { status: 201 });
 }

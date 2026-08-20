@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { updateFaq, deleteFaq } from "@/lib/supabase";
 
@@ -30,6 +31,7 @@ export async function PUT(
   }
 
   await updateFaq(numId, { question: question.trim(), answer: answer.trim(), category: category.trim() });
+  revalidateTag("faqs", { expire: 0 });
   return NextResponse.json({ ok: true });
 }
 
@@ -46,5 +48,6 @@ export async function DELETE(
     return NextResponse.json({ error: "無効なID" }, { status: 400 });
 
   await deleteFaq(numId);
+  revalidateTag("faqs", { expire: 0 });
   return NextResponse.json({ ok: true });
 }

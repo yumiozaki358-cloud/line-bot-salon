@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { sendBroadcast } from "@/lib/line";
 import { saveBroadcast, fetchBroadcasts } from "@/lib/supabase";
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
   await saveBroadcast(message.trim(), count).catch((err) =>
     console.error("Failed to save broadcast log:", err)
   );
+  revalidateTag("broadcasts", { expire: 0 });
 
   return NextResponse.json({ ok: true });
 }

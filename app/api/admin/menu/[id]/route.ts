@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { updateMenu, deleteMenu } from "@/lib/supabase";
 
@@ -34,6 +35,7 @@ export async function PUT(
   const desc = typeof description === "string" ? description.trim() || null : null;
 
   await updateMenu(numId, { name: name.trim(), price: priceNum, description: desc });
+  revalidateTag("menus", { expire: 0 });
   return NextResponse.json({ ok: true });
 }
 
@@ -50,5 +52,6 @@ export async function DELETE(
     return NextResponse.json({ error: "無効なID" }, { status: 400 });
 
   await deleteMenu(numId);
+  revalidateTag("menus", { expire: 0 });
   return NextResponse.json({ ok: true });
 }
