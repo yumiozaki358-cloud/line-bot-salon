@@ -1,3 +1,4 @@
+
 # requirements.md
 ## LINE bot + AI 自動応答システム（美容室向け）
 
